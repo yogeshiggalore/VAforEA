@@ -1,0 +1,39 @@
+turn on power supply|turn on device|power on|power on system
+
+turn off power supply|turn off device|power off|power off system
+
+set voltage to five volt|set voltage to five|set five volt|set to five volt|set to five|set five
+
+set voltage to three point three volt|set voltage to three point three|set three point three volt|set to three point three volt|set to three point three|set three point three
+
+set voltage to twelve volt|set voltage to twelve|set twelve volt|set to twelve volt|set to twelve|set twelve
+
+increment voltage by one volt|increase voltage by one volt|increase voltage by one|increment voltage by one|increment by one volt|increase by one volt|increase one volt|increment one volt
+
+increment voltage by point five volt|increase voltage by point five volt|increase voltage by point five|increment voltage by point five|increment by point five volt|increase by point five volt|increase point five volt|increment point five volt
+
+increment voltage by point one volt|increase voltage by point one volt|increase voltage by point one|increment voltage by point one|increment by point one volt|increase by point one volt|increase point one volt|increment point one volt
+
+decrement voltage by one volt|decrease voltage by one volt|decrement voltage by one|decrement voltage by one|decrement by one volt|decrease by one volt|decrease one volt|decrement one volt
+
+decrement voltage by point five volt|decrease voltage by point five volt|decrement voltage by point five|decrement voltage by point five|decrement by point five volt|decrease by point five volt|decrease point five volt|decrement point five volt
+
+decrement voltage by point one volt|decrease voltage by point one volt|decrement voltage by point one|decrement voltage by point one|decrement by point one volt|decrease by point one volt|decrease point one volt|decrement point one volt
+
+set current to one ampere|set current to one|set one ampere|set to one ampere|set to one amp|set to one amp
+
+set current to two ampere|set current to two|set two ampere|set to two ampere|set to two amp|set to two amp
+
+set current to three ampere|set current to three|set three ampere|set to three ampere|set to three amp|set to three amp
+
+set current to four ampere|set current to four|set to four ampere|set to four ampere|set to four amp|set to four amp
+
+increment current by point five ampere|increase current by point five ampere|increase current by point five|increment current by point five|increment by point five ampere|increase by point five ampere|increase point five amp|increment point five amp
+
+increment current by point one ampere|increase current by point one ampere|increase current by point one|increment current by point one|increment by point one ampere|increase by point one ampere|increase point one amp|increment point one amp
+
+increment current by point one ampere|increase current by point one ampere|increase current by point one|increment current by point one|increment by point one ampere|increase by point one ampere|increase point one amp|increment point one ampdecrement current by point five ampere|decrease current by point five ampere|decrement current by point five|decrement current by point five|decrement by point five ampere|decrease by point five ampere|decrease point five ampere|decrement point five ampere
+
+decrement current by point five ampere|decrease current by point five ampere|decrement current by point five|decrement current by point five|decrement by point five ampere|decrease by point five ampere|decrease point five ampere|decrement point five ampere
+
+decrement current by point one ampere|decrease current by point one ampere|decrement current by point one|decrement current by point one|decrement by point one ampere|decrease by point one ampere|decrease point one ampere|decrement point one ampere

@@ -1,0 +1,492 @@
+/*******************************************************************************
+ * File Name: app_vaforea.cpp
+ *
+ * Version: 1.0
+ *
+ * Description:
+ * This is header file for application module for VAforEA project
+ *
+ *
+ *
+ ********************************************************************************
+ * VAforEA (2024-25)
+ ********************************************************************************/
+
+#include <Arduino.h>
+#include <app_vaforea.h>
+#include <voice_ctrl.h>
+#include <RotaryEncoder.h>
+#include <ads1115.h>
+#include <mcp4725.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_ADS1X15.h>
+#include <EEPROM.h>
+
+struct app_config app_cfg;
+struct app_data   app_values;
+
+RotaryEncoder re_volt( 36, 39 );
+RotaryEncoder re_curr( 34, 35 );
+
+//ads1115 ads;
+Adafruit_ADS1115 ads;
+mcp4725 mcpVolt;
+mcp4725 mcpCurr;
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+//int adcConversion[4] = {1995,831000,6605,-230000};
+int adcConversion[4] = {1995,831000,6605,-230000};
+
+#define ADC_V_SLOPE		0
+#define ADC_V_OFFSET	1
+#define ADC_A_SLOPE		2
+#define ADC_A_OFFSET	3
+
+int app_begin( void )
+{
+	int status = 0;
+
+	app_hardware_init();
+	printf("Hardware init done\n");
+
+	app_eeprom_init();
+	printf("mem init done\n");
+
+	app_vc_init();
+	printf("voice ctrl init done\n");
+
+	app_re_init();
+	printf("rotary encode init done\n");
+
+	app_ads_init();
+	printf("ads1115 init done\n");
+
+	app_mcp_init();
+	printf("mcp4725 init done\n");
+
+	app_display_init();
+	printf("display init done\n");
+
+	return status;
+}
+
+int app_hardware_init(void)
+{
+	Serial.begin(115200);
+	Wire.begin();
+
+	return 0;
+}
+
+void app_read(void)
+{
+	vc.check();
+	//app_ads_read();
+}
+
+void app_process(void)
+{
+	if( app_values.vc_rqt )
+	{
+		app_values.vc_rqt = false;
+		app_vc_take_action();
+	}
+}
+
+void app_write(void)
+{
+	app_display_test();
+	//app_test_dac_with_percent();
+}
+
+void app_vc_init(void)
+{
+    app_cfg.vc.port = SELECT_UART_PORT_TWO;
+	app_cfg.vc.cb_on_cmd_rx = app_vc_cb_on_cmd_rx;
+	app_cfg.vc.cb_on_err = app_vc_cb_on_err;
+
+	printf("vc cfg port:%d cb_on_cmd_rx:%p, cb_on_err:%p\n", app_cfg.vc.port, app_cfg.vc.cb_on_cmd_rx, app_cfg.vc.cb_on_err);
+	vc.begin(&app_cfg.vc, &app_values.vc);
+}
+
+void app_vc_cb_on_cmd_rx(uint8_t cmd, uint16_t value)
+{
+	printf("voice cmd received cmd:%s value:%d\n", vc.get_cmd(), value);
+	app_vc_process_command();
+	printf("set voltage:%d and current:%d per:%d\n", app_values.xl.curr_voltage, app_values.xl.curr_current, app_values.xl.curr_volt_per);
+	app_values.vc_rqt = true;
+}
+
+void app_vc_cb_on_err(uint8_t err)
+{
+	printf("voice cmd err:%s\n", vc.get_err());
+	app_values.vc_rqt = true;
+}
+
+void app_vc_process_command(void)
+{
+	uint8_t set_per=0;
+
+	switch (app_values.vc.cmd)
+	{
+	case VOICE_CTRL_CMD_NONE:
+		
+		break;
+	
+	case VOICE_CTRL_CMD_ONOFF:
+	case VOICE_CTRL_CMD_SET_VOLT:
+	case VOICE_CTRL_CMD_UP_VOLT:
+	case VOICE_CTRL_CMD_DOWN_VOLT:
+		app_mcp_set_voltage(app_values.vc.cmd, app_values.vc.value);
+		break;
+
+	case VOICE_CTRL_CMD_SET_CURR:
+	case VOICE_CTRL_CMD_UP_CURR:
+	case VOICE_CTRL_CMD_DOWN_CURR:
+		break;
+
+	case VOICE_CTRL_CMD_ACTION:
+		
+		break;
+
+	default:
+
+		break;
+	}
+
+	app_values.vc.cmd = VOICE_CTRL_CMD_NONE;
+	app_values.vc.value = 0;
+
+}
+
+void app_vc_take_action(void)
+{
+
+}
+
+void app_re_init(void)
+{
+	re_volt.setEncoderType( EncoderType::HAS_PULLUP );
+	re_volt.setBoundaries( 0, app_cfg.mem.input_voltage, true );
+	re_volt.onTurned( &app_re_volt_cb_trig );
+	re_volt.begin();
+
+	re_curr.setEncoderType( EncoderType::HAS_PULLUP );
+	re_curr.setBoundaries( 0, app_cfg.mem.input_current, true );
+	re_curr.onTurned( &app_re_curr_cb_trig );
+	re_curr.begin();
+}
+
+void app_re_volt_cb_trig(long val)
+{
+	uint16_t volt_diff=0;
+
+	printf( "RE Volt value: %ld\n", val );
+	app_values.reVolt.cnt = val - app_values.reVolt.prv;
+	app_values.reVolt.prv = val;
+
+	printf( "RE Volt value: %ld %d\n", val, app_values.reVolt.cnt );
+
+	if( app_values.reVolt.cnt < 0 )
+	{
+		volt_diff = app_values.reVolt.cnt * 100 * -1;
+		if( volt_diff < 1000 )
+		{
+			app_mcp_set_voltage(VOICE_CTRL_CMD_DOWN_VOLT, volt_diff);
+		}
+	}
+
+	if(app_values.reVolt.cnt > 0)
+	{
+		volt_diff = app_values.reVolt.cnt * 100;
+		if( volt_diff < 1000 )
+		{
+			app_mcp_set_voltage(VOICE_CTRL_CMD_UP_VOLT, volt_diff);
+		}
+	}
+}
+
+void app_re_curr_cb_trig(long val)
+{
+	app_values.reCurr.cnt = app_values.reCurr.prv - val;
+	app_values.reCurr.prv = val;
+
+	printf( "RE Curr value: %ld %d\n", val, app_values.reCurr.cnt );
+}
+
+void app_ads_init(void)
+{
+	/*
+	app_cfg.ads.addr = 0x48;
+	app_cfg.ads.cfg_mode = ADS1115_CFG_MODE_SINGLE;
+	app_cfg.ads.run_mode = ADS1115_RUN_MODE_SINGLE;
+	app_cfg.ads.data_rate = ADS1115_DR_250_SPS;
+	app_cfg.ads.pga = ADS1115_PGA_4_096;
+	app_cfg.ads.read_channel = ADS1115_READ_CHANNEL_0;
+	
+	ads.begin( &app_cfg.ads, &app_values.ads );
+	*/
+
+	ads.begin();
+}
+
+void app_ads_read(void)
+{
+	int16_t raw_volt;
+	int16_t raw_curr;
+
+	//ads.read_channels();
+	//printf("ADS A0:%d A1:%d A2:%d A3:%d\n", app_values.ads.val_ads[0], app_values.ads.val_ads[1], app_values.ads.val_ads[2], app_values.ads.val_ads[3]);
+
+	ads.setGain(GAIN_TWO); // 2.048V = 32768
+	raw_volt = ads.readADC_Differential_0_1();
+	app_values.xl.meas_volt =  ((adcConversion[ADC_V_SLOPE] * (raw_volt - adcConversion[ADC_V_OFFSET])) >> 4) / 100;
+	ads.setGain(GAIN_EIGHT); //0.512V = 32768
+	raw_curr = ads.readADC_Differential_2_3();
+	app_values.xl.meas_curr = ((adcConversion[ADC_A_SLOPE] * (raw_curr - adcConversion[ADC_A_OFFSET])) >> 6) / 100;
+	//printf("ADS volt= r:%d c:%d curr= r:%d c:%d Vper:%d\n", raw_volt, app_values.xl.meas_volt, raw_curr, app_values.xl.meas_curr, app_values.xl.curr_volt_per);
+}
+
+void app_mcp_init(void)
+{
+	app_cfg.mcpVolt.addr = 0x60;
+	app_cfg.mcpVolt.max_volt = 5.1;
+	app_cfg.mcpVolt.pwr_dwn_mode = 0;
+	app_cfg.mcpVolt.last_wrt_eeprom = 0;
+	mcpVolt.begin(&app_cfg.mcpVolt, &app_values.mcpVolt);
+
+	app_cfg.mcpCurr.addr = 0x61;
+	app_cfg.mcpCurr.max_volt = 5.1;
+	app_cfg.mcpCurr.pwr_dwn_mode = 0;
+	app_cfg.mcpCurr.last_wrt_eeprom = 0;
+	mcpCurr.begin(&app_cfg.mcpCurr, &app_values.mcpCurr);
+
+	/* turn off device here */
+	mcpVolt.setPercentage(app_cfg.mem.max_percent);
+	app_values.xl.curr_volt_per = app_cfg.mem.max_percent;
+	app_values.xl.curr_voltage = 0;
+	//mcpVolt.setPercentage(100);
+}
+
+void app_mcp_set_voltage( uint8_t cmd, uint16_t value )
+{
+	bool process_flag=false;
+	int8_t set_percent=0;
+
+	switch (cmd)
+	{
+	case VOICE_CTRL_CMD_ONOFF:
+		process_flag = true;
+		if( value == 0 )
+		{
+			app_values.xl.voltage_backup = app_values.xl.curr_voltage;
+			app_values.xl.curr_voltage = 0;
+		}
+		else
+		{
+			app_values.xl.curr_voltage = app_values.xl.voltage_backup;
+		}
+		break;
+
+	case VOICE_CTRL_CMD_SET_VOLT:
+		process_flag = true;
+		app_values.xl.curr_voltage = value;
+		break;
+	
+	case VOICE_CTRL_CMD_UP_VOLT:
+		process_flag = true;
+		app_values.xl.curr_voltage += value;
+		if( app_values.xl.curr_voltage > app_cfg.mem.input_voltage )
+		{
+			app_values.xl.curr_voltage = app_cfg.mem.input_voltage;
+		}
+		break;
+
+	case VOICE_CTRL_CMD_DOWN_VOLT:
+		process_flag = true;
+		app_values.xl.curr_voltage -= value;
+		if( app_values.xl.curr_voltage < 0 )
+		{
+			app_values.xl.curr_voltage = 0;
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	if( process_flag == true )
+	{
+		set_percent = map( app_values.xl.curr_voltage, 0, app_cfg.mem.input_voltage, 0, app_cfg.mem.max_percent);
+		app_values.xl.curr_volt_per = DAC_100_PERCENT - set_percent;
+		if( app_values.xl.curr_volt_per < 0 )
+		{
+			app_values.xl.curr_volt_per = 0;
+		}
+
+		if( app_values.xl.curr_volt_per > app_cfg.mem.max_percent )
+		{
+			app_values.xl.curr_volt_per = app_cfg.mem.max_percent;
+		}
+
+		mcpVolt.setPercentage(app_values.xl.curr_volt_per);
+
+		if( app_values.xl.curr_voltage != 0 )
+		{
+			app_values.xl.voltage_backup = app_values.xl.curr_voltage;
+		}
+	}
+
+}
+
+
+void app_display_init(void)
+{
+	if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+	{
+		printf("display err\n");
+	}
+}
+
+void app_display_test(void)
+{
+	static int test_value=0;
+
+	display.clearDisplay();
+	display.setTextSize(1);
+	display.setTextColor(WHITE);
+	display.setCursor(0, 2);
+	display.println("hello");
+	
+	display.setTextSize(3);
+	display.setTextColor(WHITE);
+	display.setCursor(0, 20);
+	display.print((int) test_value++);
+	
+	display.display();
+}
+
+void app_eeprom_init(void)
+{
+	uint8_t val_8;
+	uint16_t val_16;
+
+	EEPROM.begin(APP_MEMORY_SIZE);
+	
+	val_8 = EEPROM.read(0);
+	val_16 = val_8;
+	val_16 <<= 8;
+	val_16 |= EEPROM.read(1);
+	app_cfg.mem.voltage = val_16;
+
+	val_8 = EEPROM.read(2);
+	val_16 = val_8;
+	val_16 <<= 8;
+	val_16 |= EEPROM.read(3);
+	app_cfg.mem.current = val_16;
+
+	val_8 = EEPROM.read(4);
+	val_16 = val_8;
+	val_16 <<= 8;
+	val_16 |= EEPROM.read(5);
+	app_cfg.mem.input_voltage = val_16;
+
+	val_8 = EEPROM.read(6);
+	val_16 = val_8;
+	val_16 <<= 8;
+	val_16 |= EEPROM.read(7);
+	app_cfg.mem.input_current = val_16;
+
+	app_cfg.mem.max_percent = EEPROM.read(8);
+
+	if( app_cfg.mem.voltage == 0xFFFF )
+	{
+		app_cfg.mem.voltage = 0;
+		EEPROM.write(0,0);
+		EEPROM.write(1,0);
+		EEPROM.commit();
+	}
+
+	if( app_cfg.mem.current == 0xFFFF )
+	{
+		app_cfg.mem.current = 0;
+		EEPROM.write(2,0);
+		EEPROM.write(3,0);
+		EEPROM.commit();
+	}
+
+	if( app_cfg.mem.input_voltage == 0xFFFF )
+	{
+		app_cfg.mem.input_voltage = 12000;
+		EEPROM.write(4,0x2E); //set to 12V
+		EEPROM.write(5,0xE0);
+		EEPROM.commit();
+	}
+
+	if( app_cfg.mem.input_current == 0xFFFF )
+	{
+		app_cfg.mem.input_current = 4000;
+		EEPROM.write(6,0xFA); //set to 4A
+		EEPROM.write(7,0x00);
+		EEPROM.commit();
+	}
+
+	if( app_cfg.mem.max_percent == 0xFF )
+	{
+		app_cfg.mem.max_percent = 100;
+		EEPROM.write(8,100);
+		EEPROM.commit();
+	}
+
+	printf("mem voltage:%X current:%X in_volt:%X per:%x\n",app_cfg.mem.voltage, app_cfg.mem.current, app_cfg.mem.input_voltage, app_cfg.mem.max_percent );
+}
+
+void app_test_dac_with_percent( void )
+{
+	
+	app_values.xl.curr_volt_per += 1;
+	if( app_values.xl.curr_volt_per > 100 )
+	{
+		app_values.xl.curr_volt_per = 0;
+	}
+
+	mcpVolt.setPercentage((100-app_values.xl.curr_volt_per));
+}
+
+void app_scan_i2c_devices(void)
+{
+	uint8_t *dataptr;
+	uint8_t I2CAddr;
+	uint8_t status;
+	uint8_t numberOfbytes;
+
+	printf("started scanning i2c devices\n\n");
+	printf("    00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n00:    ");
+	for (I2CAddr = 1; I2CAddr <= MAX_I2C_ADDRESS; I2CAddr++)
+	{
+		if ((I2CAddr % 0x10) == 0)
+		{
+			printf("\n%2X: ", I2CAddr);
+		}
+
+		Wire.beginTransmission(I2CAddr);
+    	status = Wire.endTransmission();
+		if (status == 0)
+		{
+			printf("%2X ", I2CAddr);
+		}
+		else if( status == 4 )
+		{
+			printf("XX ");
+		}
+		else
+		{
+			printf("-- ");
+		}
+
+		/* 100 ms sleep */
+		delay(100);
+	}
+	printf("\n\nstopped scanning i2c devices\n");
+}
