@@ -14,7 +14,6 @@
 #define app_vaforea_h
 #include <Arduino.h>
 #include <voice_ctrl.h>
-#include <ads1115.h>
 #include <mcp4725.h>
 
 #define MAX_I2C_ADDRESS	127
@@ -37,7 +36,6 @@ struct mem_config
 struct app_config
 {
 	struct voice_config   vc;
-	struct ads1115_config ads;
 	struct mcp4725_config mcpVolt;
 	struct mcp4725_config mcpCurr;
 	struct mem_config mem;
@@ -58,15 +56,14 @@ struct xl4015
 	uint8_t  exp_volt_per;
 	uint16_t exp_voltage;
 	uint16_t exp_current;
-	uint16_t meas_volt;
-	uint16_t meas_curr;
+	float meas_volt;
+	float meas_curr;
 	uint16_t input_volt;
 };
 
 struct app_data
 {
 	struct voice_data vc;
-	struct ads1115_data ads;
 	struct mcp4725_data mcpVolt;
 	struct mcp4725_data mcpCurr;
 	struct re_data reVolt;

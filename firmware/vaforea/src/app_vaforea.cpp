@@ -16,7 +16,6 @@
 #include <app_vaforea.h>
 #include <voice_ctrl.h>
 #include <RotaryEncoder.h>
-#include <ads1115.h>
 #include <mcp4725.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -30,13 +29,10 @@ struct app_data   app_values;
 RotaryEncoder re_volt( 36, 39 );
 RotaryEncoder re_curr( 34, 35 );
 
-//ads1115 ads;
 Adafruit_ADS1115 ads;
 mcp4725 mcpVolt;
 mcp4725 mcpCurr;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
-//int adcConversion[4] = {1995,831000,6605,-230000};
-int adcConversion[4] = {1995,831000,6605,-230000};
 
 #define ADC_V_SLOPE		0
 #define ADC_V_OFFSET	1
@@ -82,22 +78,16 @@ int app_hardware_init(void)
 void app_read(void)
 {
 	vc.check();
-	//app_ads_read();
 }
 
 void app_process(void)
 {
-	if( app_values.vc_rqt )
-	{
-		app_values.vc_rqt = false;
-		app_vc_take_action();
-	}
+
 }
 
 void app_write(void)
 {
-	app_display_test();
-	//app_test_dac_with_percent();
+
 }
 
 void app_vc_init(void)
@@ -217,17 +207,6 @@ void app_re_curr_cb_trig(long val)
 
 void app_ads_init(void)
 {
-	/*
-	app_cfg.ads.addr = 0x48;
-	app_cfg.ads.cfg_mode = ADS1115_CFG_MODE_SINGLE;
-	app_cfg.ads.run_mode = ADS1115_RUN_MODE_SINGLE;
-	app_cfg.ads.data_rate = ADS1115_DR_250_SPS;
-	app_cfg.ads.pga = ADS1115_PGA_4_096;
-	app_cfg.ads.read_channel = ADS1115_READ_CHANNEL_0;
-	
-	ads.begin( &app_cfg.ads, &app_values.ads );
-	*/
-
 	ads.begin();
 }
 
@@ -236,16 +215,13 @@ void app_ads_read(void)
 	int16_t raw_volt;
 	int16_t raw_curr;
 
-	//ads.read_channels();
-	//printf("ADS A0:%d A1:%d A2:%d A3:%d\n", app_values.ads.val_ads[0], app_values.ads.val_ads[1], app_values.ads.val_ads[2], app_values.ads.val_ads[3]);
+	ads.setGain(GAIN_TWO);
+    raw_volt = ads.readADC_SingleEnded(0);
+    app_values.xl.meas_volt = ads.computeVolts(raw_volt) * 10;
+	raw_curr = ads.readADC_SingleEnded(2);
+    app_values.xl.meas_curr = ads.computeVolts(raw_curr) * 10;
 
-	ads.setGain(GAIN_TWO); // 2.048V = 32768
-	raw_volt = ads.readADC_Differential_0_1();
-	app_values.xl.meas_volt =  ((adcConversion[ADC_V_SLOPE] * (raw_volt - adcConversion[ADC_V_OFFSET])) >> 4) / 100;
-	ads.setGain(GAIN_EIGHT); //0.512V = 32768
-	raw_curr = ads.readADC_Differential_2_3();
-	app_values.xl.meas_curr = ((adcConversion[ADC_A_SLOPE] * (raw_curr - adcConversion[ADC_A_OFFSET])) >> 6) / 100;
-	//printf("ADS volt= r:%d c:%d curr= r:%d c:%d Vper:%d\n", raw_volt, app_values.xl.meas_volt, raw_curr, app_values.xl.meas_curr, app_values.xl.curr_volt_per);
+    //printf("ADS volt= r:%d c:%f curr= r:%d c:%d Vper:%d\n", raw_volt, app_values.xl.meas_volt, raw_curr, app_values.xl.meas_curr, app_values.xl.curr_volt_per);
 }
 
 void app_mcp_init(void)
@@ -266,7 +242,6 @@ void app_mcp_init(void)
 	mcpVolt.setPercentage(app_cfg.mem.max_percent);
 	app_values.xl.curr_volt_per = app_cfg.mem.max_percent;
 	app_values.xl.curr_voltage = 0;
-	//mcpVolt.setPercentage(100);
 }
 
 void app_mcp_set_voltage( uint8_t cmd, uint16_t value )
@@ -354,16 +329,20 @@ void app_display_test(void)
 	static int test_value=0;
 
 	display.clearDisplay();
-	display.setTextSize(1);
+	display.setTextSize(2);
 	display.setTextColor(WHITE);
-	display.setCursor(0, 2);
-	display.println("hello");
+	display.setCursor(7, 2);
+	display.println("<VAforEA>");
 	
-	display.setTextSize(3);
+	display.setTextSize(2);
 	display.setTextColor(WHITE);
 	display.setCursor(0, 20);
-	display.print((int) test_value++);
-	
+	display.print("V:");
+	display.print(app_values.xl.meas_volt, 1);
+	display.setCursor(0, 45);
+	display.print("C:");
+	display.print(app_values.xl.meas_curr, 1);
+
 	display.display();
 }
 
@@ -439,7 +418,7 @@ void app_eeprom_init(void)
 		EEPROM.commit();
 	}
 
-	printf("mem voltage:%X current:%X in_volt:%X per:%x\n",app_cfg.mem.voltage, app_cfg.mem.current, app_cfg.mem.input_voltage, app_cfg.mem.max_percent );
+	printf("mem voltage:%d current:%d in_volt:%d in_curr:%d per:%d\n",app_cfg.mem.voltage, app_cfg.mem.current, app_cfg.mem.input_voltage, app_cfg.mem.input_current, app_cfg.mem.max_percent );
 }
 
 void app_test_dac_with_percent( void )
