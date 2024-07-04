@@ -110,4 +110,33 @@ pinouts
 schematics
 ![vc_02_06](https://github.com/yogeshiggalore/VAforEA/assets/5477695/046fdbbc-619f-45ca-a413-54fc406192ae)
 
+# configuring VC-02
+Open link http://voice.ai-thinker.com/#/
 
+1. create user login
+2. click on Create product
+3. Select a product category
+4. Select offline and module as VC-02
+5. Product name VAforEA
+6. Select language English
+
+![vc_02_07](https://github.com/yogeshiggalore/VAforEA/assets/5477695/f19652e1-ce7c-4bc1-a40c-ab596ff91e3e)
+
+5. Set a single mic.
+6. Distance 1 to 5 meters.
+7. AEC echo cancellation closed
+8. Study state noise close
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/2e6efb9e-5bf3-458b-b1a3-de2dafa9e2c3)
+
+9. Set GPIO pins as shown below
+![vc_02_08](https://github.com/yogeshiggalore/VAforEA/assets/5477695/95842e78-f27d-4971-bfaf-f6d4474a2812)
+
+10. Set wake word and wake up sensitive to high and configure reply wake word.
+![vc_02_09](https://github.com/yogeshiggalore/VAforEA/assets/5477695/e4deccc0-44db-40e9-988d-e457cf3b607d)
+
+11. Configure voice command as shown below
+![vc_02_10](https://github.com/yogeshiggalore/VAforEA/assets/5477695/5c3bf0a5-ffc7-4836-b671-839832d24370)
+
+![vc_02_11](https://github.com/yogeshiggalore/VAforEA/assets/5477695/cfce57cd-6d8c-439a-b391-8ce94f3231e1)
+
+![vc_02_12](https://github.com/yogeshiggalore/VAforEA/assets/5477695/acbc92e8-6095-40cf-9258-e3e50c787d17)
