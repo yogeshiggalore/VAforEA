@@ -16,7 +16,16 @@ https://how2electronics.com/how-to-use-ads1115-16-bit-adc-module-with-arduino/
 
 https://circuitdigest.com/microcontroller-projects/arduino-dac-tutorial-interfacing-mcp4725-dac
 
+# Idea/Concept
 
+# components used
+1. XL4015 buck converter with adjustable voltage and current limit
+2. ESP32 wifi/ble based microcontroller module
+3. ADS1115 4-channel 16-bit I2C ADC
+4. SD1306 0.96" OLED I2C display module
+6. 2 MCP4725 12-bit I2C DAC
+7. 2 Rotary encoders EC11
+8. Resistors 47R,390R,470R,1K,10K,2K2,11K2,100K
 
 # About XL4015 power supply module.
 The XL4015 power supply module has onboard constant voltage (CV) and constant current (CC) control feature which is useful for general-purpose power supply and battery charger applications.
