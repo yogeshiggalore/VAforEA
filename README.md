@@ -17,8 +17,16 @@ https://how2electronics.com/how-to-use-ads1115-16-bit-adc-module-with-arduino/
 https://circuitdigest.com/microcontroller-projects/arduino-dac-tutorial-interfacing-mcp4725-dac
 
 # Idea/Concept
+Setting voltage and current of XL4015 power supply module using VC-02 voice control module. 
 
-# components used
+The XL4015 module has 2 multi-turn potentiometers to adjust the output voltage and the current limit.
+The voltage adjustment normally works by varying the 10K potentiometer which taps down the output voltage across a 270R resistor to provide a feedback voltage into the converter. This is compared against an internal 1.25V reference and to vary the duty cycle of the converter. So for example, if the potentiometer was set to be 540 ohm then the output voltage would settle to 3.75 volts. To provide digital control the potentiometer is set to a higher value and then current is fed into the 270R resistor from the DAC output via a 390R resistor. As the DAC output increases then less current is needed from the output via the potentiometer to give the 1.25V across the 270R and so the output voltage drops. At one extreme the DAC output can provide all the current needed to get the 1.25V across the 270R resistor and so the output voltage needed is 1.25V.
+
+The current limit on the XL4015 module works by monitoring the current drawn across a 50 milliOhm shunt. This is then compared with the limit current setting and an op-amp then reduces the buck converter to maintain that current. The voltage needed to compare is normally controlled by the limit current potentiometer via some additional resistor division as the voltage range needed is quite small (0->300mV). To provide digital control the potentiometer is set to its maximum and then an override voltage is fed in from a DAC. This is tapped down by the 470R /47R divider to give maximum precision and to keep the impedance of the override as low as possible.
+
+The measurement side is handled by a 4-channel 16-bit ADC (ADS1115). This actually used as a 2-channel differential ADC to provide better accuracy. One pair is used to monitor the output voltage via a 10K/1K tap down. This together with a 2.048V input range on the ADC gives the range required and good precision. The other pair is used to measure the voltage across the XL4015 50milliohm current shunt and so measure the current drawn. As this is quite a small voltage the ADC has a programmable gain which is used to give greater precision.
+
+# Components used
 1. XL4015 buck converter with adjustable voltage and current limit
 2. ESP32 wifi/ble based microcontroller module
 3. VC-02 voice control module
@@ -40,7 +48,7 @@ apart from the input and output screw terminal connectors, there are two multitu
 
 Slowly turning the voltage adjustment (V-ADJ) trim pot clockwise will raise the output voltage gradually, and a counterclockwise rotation will lower it. Likewise, clockwise turning of the current adjustment (I-ADJ) trim pot increases the current limit while counterclockwise action decreases the current limit. It’s advised to adjust the voltage level at first, and then the current level (this fine-tuning procedure will be discussed in detail later).
 
-Needless to say, at the heart of the module is an XL4015 chip from XLSEMI (www.xlsemi.com) which is a 180 KHz fixed frequency PWM step-down (buck) DC/DC converter, capable of driving a 5A load with high efficiency, low ripple and excellent line and load regulation. According to its datasheet (Rev 1.5), the PWM control circuit can adjust the duty ratio linearly from 0 to 100%. An over current protection function is built inside so that when a short circuit occurs, the operation frequency will be reduced to 48KHz. Below you can see the function block diagram of XL4015 (XL4015E1).
+Needless to say, at the heart of the module is an XL4015 chip from XLSEMI (www.xlsemi.com) which is a 180 KHz fixed frequency PWM step-down (buck) DC/DC converter, capable of driving a 5A load with high efficiency, low ripple and excellent line and load regulation. According to its datasheet (Rev 1.5), the PWM control circuit can adjust the duty ratio linearly from 0 to 100%. An over-current protection function is built inside so that when a short circuit occurs, the operation frequency will be reduced to 48KHz. Below you can see the function block diagram of XL4015 (XL4015E1).
 
 ![5-XL4015-Function-Block-Diagram](https://github.com/yogeshiggalore/VAforEA/assets/5477695/01e852fc-c6f8-4643-8e2e-607a4b2d33fe)
 
