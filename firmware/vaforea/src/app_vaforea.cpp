@@ -64,6 +64,9 @@ int app_begin( void )
 	app_display_init();
 	printf("display init done\n");
 
+	app_relay_init();
+	printf("relay init done\n");
+
 	return status;
 }
 
@@ -71,7 +74,8 @@ int app_hardware_init(void)
 {
 	Serial.begin(115200);
 	Wire.begin();
-
+	pinMode( LED_BUILTIN, OUTPUT );
+	digitalWrite(LED_BUILTIN, LOW);
 	return 0;
 }
 
@@ -102,9 +106,20 @@ void app_vc_init(void)
 
 void app_vc_cb_on_cmd_rx(uint8_t cmd, uint16_t value)
 {
+	uint8_t cmd_act;
+
 	printf("voice cmd received cmd:%s value:%d\n", vc.get_cmd(), value);
-	app_vc_process_command();
-	printf("set voltage:%d and current:%d per:%d\n", app_values.xl.curr_voltage, app_values.xl.curr_current, app_values.xl.curr_volt_per);
+	cmd_act = app_vc_process_command();
+	
+	if( cmd_act == VOICE_CTRL_CMD_ACTION )
+	{
+		printf("take action command\n");
+	}
+	else
+	{
+		printf("set voltage:%d and current:%d per:%d\n", app_values.xl.curr_voltage, app_values.xl.curr_current, app_values.xl.curr_volt_per);
+	}
+	
 	app_values.vc_rqt = true;
 }
 
@@ -114,9 +129,13 @@ void app_vc_cb_on_err(uint8_t err)
 	app_values.vc_rqt = true;
 }
 
-void app_vc_process_command(void)
+uint8_t app_vc_process_command(void)
 {
 	uint8_t set_per=0;
+	uint8_t ss_buf[9] = {0xAA, 0x55, VOICE_PC_ACT_CMD_SCRNSHT, 0x00, 0x00, 0xA5, 0x5A, 0x0D, 0x0A};
+	uint8_t cmd = VOICE_CTRL_CMD_ERR;
+
+	cmd = app_values.vc.cmd;
 
 	switch (app_values.vc.cmd)
 	{
@@ -134,10 +153,11 @@ void app_vc_process_command(void)
 	case VOICE_CTRL_CMD_SET_CURR:
 	case VOICE_CTRL_CMD_UP_CURR:
 	case VOICE_CTRL_CMD_DOWN_CURR:
+		//app_mcp_set_current(app_values.vc.cmd, app_values.vc.value);
 		break;
 
 	case VOICE_CTRL_CMD_ACTION:
-		
+		Serial.write(ss_buf, sizeof(ss_buf));
 		break;
 
 	default:
@@ -148,6 +168,7 @@ void app_vc_process_command(void)
 	app_values.vc.cmd = VOICE_CTRL_CMD_NONE;
 	app_values.vc.value = 0;
 
+	return cmd;
 }
 
 void app_vc_take_action(void)
@@ -181,6 +202,7 @@ void app_re_volt_cb_trig(long val)
 	if( app_values.reVolt.cnt < 0 )
 	{
 		volt_diff = app_values.reVolt.cnt * 100 * -1;
+		/* multiplying -1 make it positive value so < 1000 works */
 		if( volt_diff < 1000 )
 		{
 			app_mcp_set_voltage(VOICE_CTRL_CMD_DOWN_VOLT, volt_diff);
@@ -199,10 +221,31 @@ void app_re_volt_cb_trig(long val)
 
 void app_re_curr_cb_trig(long val)
 {
+	uint16_t curr_diff=0;
+
 	app_values.reCurr.cnt = app_values.reCurr.prv - val;
 	app_values.reCurr.prv = val;
 
 	printf( "RE Curr value: %ld %d\n", val, app_values.reCurr.cnt );
+
+	if( app_values.reCurr.cnt < 0 )
+	{
+		curr_diff = app_values.reCurr.cnt * 100 * -1;
+		/* multiplying -1 make it positive value so < 1000 works */
+		if( curr_diff < 1000 )
+		{
+			app_mcp_set_current(VOICE_CTRL_CMD_DOWN_CURR, curr_diff);
+		}
+	}
+
+	if(app_values.reCurr.cnt > 0)
+	{
+		curr_diff = app_values.reCurr.cnt * 100;
+		if( curr_diff < 1000 )
+		{
+			app_mcp_set_voltage(VOICE_CTRL_CMD_UP_CURR, curr_diff);
+		}
+	}
 }
 
 void app_ads_init(void)
@@ -238,10 +281,16 @@ void app_mcp_init(void)
 	app_cfg.mcpCurr.last_wrt_eeprom = 0;
 	mcpCurr.begin(&app_cfg.mcpCurr, &app_values.mcpCurr);
 
-	/* turn off device here */
+	/* turn off voltage */
 	mcpVolt.setPercentage(app_cfg.mem.max_percent);
 	app_values.xl.curr_volt_per = app_cfg.mem.max_percent;
 	app_values.xl.curr_voltage = 0;
+
+	/* turn off current */
+	mcpCurr.setPercentage(app_cfg.mem.max_percent);
+	app_values.xl.curr_curr_per = app_cfg.mem.max_percent;
+	app_values.xl.curr_current = 0;
+
 }
 
 void app_mcp_set_voltage( uint8_t cmd, uint16_t value )
@@ -252,16 +301,28 @@ void app_mcp_set_voltage( uint8_t cmd, uint16_t value )
 	switch (cmd)
 	{
 	case VOICE_CTRL_CMD_ONOFF:
-		process_flag = true;
-		if( value == 0 )
-		{
-			app_values.xl.voltage_backup = app_values.xl.curr_voltage;
-			app_values.xl.curr_voltage = 0;
-		}
-		else
-		{
-			app_values.xl.curr_voltage = app_values.xl.voltage_backup;
-		}
+		#ifdef USE_RELAY_CONTROL
+			if( value == 0 )
+			{
+				app_relay_control(RELAY_OFF);
+			}
+			else
+			{
+				app_relay_control(RELAY_ON);
+			}
+		#else
+			process_flag = true;
+			if( value == 0 )
+			{
+				app_values.xl.voltage_backup = app_values.xl.curr_voltage;
+				app_values.xl.curr_voltage = 0;
+			}
+			else
+			{
+				app_values.xl.curr_voltage = app_values.xl.voltage_backup;
+			}
+
+		#endif
 		break;
 
 	case VOICE_CTRL_CMD_SET_VOLT:
@@ -315,6 +376,64 @@ void app_mcp_set_voltage( uint8_t cmd, uint16_t value )
 
 }
 
+void app_mcp_set_current( uint8_t cmd, uint16_t value )
+{
+	bool process_flag=false;
+	int8_t set_percent=0;
+
+	switch (cmd)
+	{
+
+	case VOICE_CTRL_CMD_SET_CURR:
+		process_flag = true;
+		app_values.xl.curr_current = value;
+		break;
+	
+	case VOICE_CTRL_CMD_UP_CURR:
+		process_flag = true;
+		app_values.xl.curr_current += value;
+		if( app_values.xl.curr_current > app_cfg.mem.input_current )
+		{
+			app_values.xl.curr_current = app_cfg.mem.input_current;
+		}
+		break;
+
+	case VOICE_CTRL_CMD_DOWN_CURR:
+		process_flag = true;
+		app_values.xl.curr_current -= value;
+		if( app_values.xl.curr_current < 0 )
+		{
+			app_values.xl.curr_current = 0;
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	if( process_flag == true )
+	{
+		set_percent = map( app_values.xl.curr_current, 0, app_cfg.mem.input_current, 0, app_cfg.mem.max_percent);
+		app_values.xl.curr_curr_per = DAC_100_PERCENT - set_percent;
+		if( app_values.xl.curr_curr_per < 0 )
+		{
+			app_values.xl.curr_curr_per = 0;
+		}
+
+		if( app_values.xl.curr_curr_per > app_cfg.mem.max_percent )
+		{
+			app_values.xl.curr_curr_per = app_cfg.mem.max_percent;
+		}
+
+		mcpCurr.setPercentage(app_values.xl.curr_curr_per);
+
+		if( app_values.xl.curr_current != 0 )
+		{
+			app_values.xl.current_backup = app_values.xl.curr_current;
+		}
+	}
+
+}
 
 void app_display_init(void)
 {
@@ -326,8 +445,7 @@ void app_display_init(void)
 
 void app_display_test(void)
 {
-	static int test_value=0;
-
+	
 	display.clearDisplay();
 	display.setTextSize(2);
 	display.setTextColor(WHITE);
@@ -421,6 +539,36 @@ void app_eeprom_init(void)
 	printf("mem voltage:%d current:%d in_volt:%d in_curr:%d per:%d\n",app_cfg.mem.voltage, app_cfg.mem.current, app_cfg.mem.input_voltage, app_cfg.mem.input_current, app_cfg.mem.max_percent );
 }
 
+void app_relay_init(void)
+{
+	pinMode( RELAY_PIN, OUTPUT );
+	#ifdef USE_RELAY_CONTROL
+		digitalWrite( RELAY_PIN, RELAY_OFF );
+		app_values.xl.relay_status = RELAY_OFF;
+	#else
+		digitalWrite( RELAY_PIN, RELAY_ON );
+		app_values.xl.relay_status = RELAY_UNKNW;
+	#endif
+}
+
+void app_relay_control(bool val)
+{
+	#ifdef USE_RELAY_CONTROL
+		if( val == RELAY_ON )
+		{
+			digitalWrite( RELAY_PIN, RELAY_ON );
+			app_values.xl.relay_status = RELAY_ON;
+		}
+		else
+		{
+			digitalWrite( RELAY_PIN, RELAY_OFF );
+			app_values.xl.relay_status = RELAY_OFF;
+		}
+	#else
+		app_values.xl.relay_status = RELAY_UNKNW;
+	#endif
+}
+
 void app_test_dac_with_percent( void )
 {
 	
@@ -431,6 +579,30 @@ void app_test_dac_with_percent( void )
 	}
 
 	mcpVolt.setPercentage((100-app_values.xl.curr_volt_per));
+}
+
+void app_pc_act_send(void)
+{
+	uint8_t send_buf[9] = {0xAA, 0x55, 0x00, 0x00, 0x00, 0xA5, 0x5A, 0x0D, 0x0A};
+
+	/* send voltage data */
+	send_buf[VOICE_CTRL_BYTE_IDX_CC] = VOICE_PC_ACT_CMD_VLTRED;
+	send_buf[VOICE_CTRL_BYTE_IDX_D1] = app_values.xl.curr_voltage >> 8;
+	send_buf[VOICE_CTRL_BYTE_IDX_D2] = app_values.xl.curr_voltage;
+	Serial.write(send_buf, sizeof(send_buf));
+
+	/* send current data */
+	//send_buf[VOICE_CTRL_BYTE_IDX_CC] = VOICE_PC_ACT_CMD_CURRED;
+	//send_buf[VOICE_CTRL_BYTE_IDX_D1] = app_values.xl.curr_current >> 8;
+	//send_buf[VOICE_CTRL_BYTE_IDX_D2] = app_values.xl.curr_current;
+	//Serial.write(send_buf, sizeof(send_buf));
+
+	/* send relay data */
+	//send_buf[VOICE_CTRL_BYTE_IDX_CC] = VOICE_PC_ACT_CMD_RLYSTS;
+	//send_buf[VOICE_CTRL_BYTE_IDX_D1] = 0;
+	//send_buf[VOICE_CTRL_BYTE_IDX_D2] = app_values.xl.relay_status;
+	//Serial.write(send_buf, sizeof(send_buf));
+
 }
 
 void app_scan_i2c_devices(void)

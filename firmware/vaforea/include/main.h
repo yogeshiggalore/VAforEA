@@ -4,9 +4,9 @@
 #include <Arduino.h>
 
 #define ADC_READ_INTERVAL   100
-#define OLED_DISPLAY_INTERVAL   500
+#define MONITOR_INTERVAL   500
 
 void ADC_Read_Task(void *parameters);
-void OLED_Display_Task(void *parameters);
+void Monitor_Task(void *parameters);
 
 #endif

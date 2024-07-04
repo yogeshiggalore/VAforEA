@@ -24,6 +24,23 @@
 
 #define DAC_100_PERCENT		100
 
+#define RELAY_ON	1
+#define RELAY_OFF	0
+#define RELAY_UNKNW	0xFF
+
+#define RELAY_PIN	4
+
+#define USE_RELAY_CONTROL	1
+
+enum VOICE_PC_ACT_CMD
+{
+	VOICE_PC_ACT_CMD_SCRNSHT=0x80,
+	VOICE_PC_ACT_CMD_VLTRED=0x81,
+	VOICE_PC_ACT_CMD_CURRED=0x82,
+	VOICE_PC_ACT_CMD_RLYSTS=0x83,
+	VOICE_PC_ACT_CMD_ERR = 0xFF,
+};
+
 struct mem_config
 {
 	uint16_t voltage;
@@ -52,13 +69,22 @@ struct xl4015
 	int8_t  curr_volt_per;
 	int16_t curr_voltage;
 	int16_t voltage_backup;
+
+	int16_t curr_curr_per;
 	int16_t curr_current;
+	int16_t current_backup;
+
 	uint8_t  exp_volt_per;
 	uint16_t exp_voltage;
+	
+	uint8_t  exp_curr_per;
 	uint16_t exp_current;
+	
 	float meas_volt;
 	float meas_curr;
 	uint16_t input_volt;
+
+	uint8_t relay_status;
 };
 
 struct app_data
@@ -85,7 +111,7 @@ void app_vc_init(void);
 void app_vc_cb_on_cmd_rx(uint8_t cmd, uint16_t value);
 void app_vc_cb_on_err(uint8_t err);
 void app_vc_take_action(void);
-void app_vc_process_command(void);
+uint8_t app_vc_process_command(void);
 
 void app_re_init(void);
 void app_re_volt_cb_trig(long val);
@@ -96,9 +122,15 @@ void app_ads_read(void);
 
 void app_mcp_init(void);
 void app_mcp_set_voltage( uint8_t cmd, uint16_t value );
+void app_mcp_set_current( uint8_t cmd, uint16_t value );
 
 void app_display_init(void);
 void app_display_test(void);
+
+void app_relay_init(void);
+void app_relay_control(bool val);
+
+void app_pc_act_send(void);
 
 void app_eeprom_init(void);
 
