@@ -140,3 +140,25 @@ Open link http://voice.ai-thinker.com/#/
 ![vc_02_11](https://github.com/yogeshiggalore/VAforEA/assets/5477695/cfce57cd-6d8c-439a-b391-8ce94f3231e1)
 
 ![vc_02_12](https://github.com/yogeshiggalore/VAforEA/assets/5477695/acbc92e8-6095-40cf-9258-e3e50c787d17)
+
+11. for control configure UART as shown below
+![vc_02_13](https://github.com/yogeshiggalore/VAforEA/assets/5477695/8f8f99ad-270d-4f20-9ea2-e477658635c1)
+
+![vc_02_14](https://github.com/yogeshiggalore/VAforEA/assets/5477695/6671e972-2487-4906-a5fd-89ba587d70e2)
+
+![vc_02_15](https://github.com/yogeshiggalore/VAforEA/assets/5477695/60dc6352-2dad-4d62-98c9-08ccdd7919f3)
+
+12. Configure wake-up free as shown below
+![vc_02_16](https://github.com/yogeshiggalore/VAforEA/assets/5477695/14461f46-cf24-4e2e-8933-e5fb3aff520f)
+
+13. Configure the speaker as shown below
+![vc_02_17](https://github.com/yogeshiggalore/VAforEA/assets/5477695/77ce5e1e-e7f0-47c2-8d44-b2144349f3f7)
+
+14. Do configure as shown below
+![vc_02_18](https://github.com/yogeshiggalore/VAforEA/assets/5477695/df67ad43-e3a1-4eec-b21c-f0c1849a9a4d)
+
+15. Build SDK as shown below
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/58c352f0-f112-4a76-9142-b421d006b6b1)
+
+
+17. 
