@@ -335,4 +335,16 @@ Below is the image of MCP4725 with clearly indicating pin names.
 
 for more info refer this link https://circuitdigest.com/microcontroller-projects/arduino-dac-tutorial-interfacing-mcp4725-dac
 
+# About I2C OLED
+The organic light-emitting diode (OLED) display that we’ll use in this tutorial is the SSD1306 model: a monocolor, 0.96-inch display with 128×64 pixels as shown in the following figure.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/df54c0c6-1316-40ca-bfea-6ca40f999312)
 
+The OLED display doesn’t require backlight, which results in a very nice contrast in dark environments. Additionally, its pixels consume energy only when they are on, so the OLED display consumes less power when compared with other displays.
+
+The model we’re using here has only four pins and communicates with the Arduino using I2C communication protocol. There are models that come with an extra RESET pin. There are also other OLED displays that communicate using SPI communication.
+
+Pin wiring
+Because the OLED display uses I2C communication protocol, wiring is very simple. You just need to connect to the Arduino Uno I2C pins as shown in the table below.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/b82cc194-ba56-4367-8f39-0cdc59270d6e)
+
+For more info refer this link https://randomnerdtutorials.com/guide-for-oled-display-with-arduino/
