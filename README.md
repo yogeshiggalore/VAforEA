@@ -348,3 +348,50 @@ Because the OLED display uses I2C communication protocol, wiring is very simple.
 ![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/b82cc194-ba56-4367-8f39-0cdc59270d6e)
 
 For more info refer this link https://randomnerdtutorials.com/guide-for-oled-display-with-arduino/
+
+# About KY-040 Rotary Encoder
+KY-040 rotary encoder is a device that generates an electrical signal based on how much the rotary input device (knob) is rotated and the direction it is rotating in. It is a position sensor with a knob and can be used to control stepper or servo motors with precision.
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/8b32372e-dccc-4acc-99b3-ae218f7fe657)
+
+Features and Specifications of KY-040 Rotary Encoder
+Below mentioned are some of the features and specifications of the KY-040 Rotary Encoder module:
+
+Operating Voltage: 5V
+Mechanical angle: 360 Degrees
+Output: 2-bit gray code
+Positions per revolution: 30
+Pin Configuration of KY-040 Rotary Encoder
+The KY-040 module has 5 output pins. Two of which are for the power of the module whereas, 3 are for the output data of the turns and direction of the knob. The table below describes the pin type and the function of each pin in the Rotary module.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/c90f8556-7c67-4e5a-ae51-110181d24bda)
+
+Connecting KY-040 Rotary Encoder Module with MCU/MPU
+Connecting a KY-040 Rotary encoder module to a microcontroller or a microprocessor is quite simple. As mentioned in the section above, there are 5 pins on the encoder module.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/7699b171-6350-4010-930f-664fb30d5ad7)
+Two pins for the power, +, and ground of the encoder module can be connected to the VCC and the ground terminal of the MCU/MPU, respectively. The CLK and the DT pin both generate a digital output and can be connected to the digital pins of an MCU/MPU.
+
+Working Principle of KY-040 Rotary Encoder
+The encoder module generates a digital signal(square pulses) upon the rotation of the knob, let’s see how the encoder module works.
+
+The encoder has a disk with contact pints evenly placed from each other which are connected to the common pin C(Ground). As we start rotating the knob, the disk also moves and makes contact with the output pins A and B one by one, hence generating two square waves simultaneously. Simply by counting the number of square waves generated, the rotated position can be determined. A simple program can be written to monitor the number of waves generated and output can be extracted.
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/38afe123-70bf-4879-a8eb-63998cc06f6d)
+
+To know the direction of rotation, determining how the switch changes its position is essential.
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/b6baa393-9f1e-42b1-8916-2953f575f31e)
+
+If output A changed states first, the switch is rotating in a clockwise direction, whereas if output B changes its state first, we know that the switch is rotating in a counter-clockwise direction.
+
+ 
+
+Applications for KY-040 Rotary Encoder
+Here are some of the applications of the KY-040 rotary encoder module:
+
+Robotic arm controller
+Servo and Stepper motor control
+Precise motor movement
+
+2D model
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/ea1bb56d-713b-4626-82a5-e29e0e49236f)
+
