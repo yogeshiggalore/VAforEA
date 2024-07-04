@@ -12,6 +12,9 @@ https://www.espressif.com/
 
 https://randomnerdtutorials.com/getting-started-with-esp32/
 
+https://how2electronics.com/how-to-use-ads1115-16-bit-adc-module-with-arduino/
+
+
 
 # About XL4015 power supply module.
 The XL4015 power supply module has onboard constant voltage (CV) and constant current (CC) control feature which is useful for general-purpose power supply and battery charger applications.
@@ -300,4 +303,34 @@ These modules are widely available from different manufacturers and are very ine
 
 ![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/07f09ff8-1fb0-48be-878c-0e8cde1bd8e8)
 
-It follows the typical connection for the ADS1115 chip. The 10K ohms pull-up resistors are installed on the I2C and Alert pins. Also, there is a 1uF capacitor installed between the VDD pin and the GND which serves as a decoupling capacitor.
+For more info visit this page https://how2electronics.com/how-to-use-ads1115-16-bit-adc-module-with-arduino/
+
+# About MCP4725 Digital to analog converter
+We all know that the Microcontrollers work only with digital values but in real world we have to deal with analog signals. That’s why ADC (Analog to Digital Converters) is there to convert real world Analog values into Digital form so that microcontrollers can process the signals. But what if we need Analog signals from digital values, so here comes the DAC (Digital to Analog Converter).
+
+A simple example for Digital to Analog converter is recording a song in studio where an artist singer is using microphone and singing a song. These analog sound waves are converted into digital form and then stored in a digital format file and when the song is played using the stored digital file those digital values are converted into analog signals for speaker output. So in this system DAC is used.
+
+DAC can be used in many applications such as Motor control, Control Brightness of the LED Lights, Audio Amplifier, Video Encoders, Data Acquisition Systems etc.
+
+In many microcontrollers there is an internal DAC that can be used to produce analog output. But Arduino processors such as ATmega328/ATmega168 don’t have DAC inbuilt. Arduino has ADC feature (Analog to Digital Converter) but it has no DAC (Digital to Analog Converter). It has a 10-bit DAC in internal ADC but this DAC cannot be used as standalone. So here in this Arduino DAC tutorial, we use an additional board called MCP4725 DAC Module with Arduino.
+
+MCP4725 DAC Module (Digital to Analog Converter)
+MCP4725 IC is a 12-Bit Digital to Analog Converter Module which is used to generate output analog voltages from (0 to 5V) and it is controlled by using I2C communication. It also comes with on board nonvolatile memory EEPROM.
+
+This IC has 12-Bit resolution. This means we use (0 to 4096) as input to provide the voltage output with respect to reference voltage. Maximum reference voltage is 5V.
+
+Formula to calculate Output Voltage
+
+O/P Voltage = (Reference Voltage / Resolution) x Digital Value
+For Example if we use 5V as reference voltage and let’s assume that digital value is 2048. So to calculate the DAC output.
+
+O/P Voltage = (5/ 4096) x 2048 = 2.5V
+Pinout of MCP4725
+
+Below is the image of MCP4725 with clearly indicating pin names.
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/1b98a234-f374-4500-bb38-5c1bd5af61af)
+
+for more info refer this link https://circuitdigest.com/microcontroller-projects/arduino-dac-tutorial-interfacing-mcp4725-dac
+
+
