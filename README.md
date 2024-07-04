@@ -240,3 +240,64 @@ GPIO pinout
 
 For programming and other detailed info please click this link
 https://randomnerdtutorials.com/getting-started-with-esp32/
+
+# About ADS1115 analog to digital converter
+In this guide, we will learn how to use ADS1115 16-Bit ADC Module with Arduino. An ADS1115 breakout board is a 16-bit analog-to-digital converter (ADC) that we can use with Arduino, ESP8266/32, STM32, or any other Microcontrollers.
+
+Arduino boards come with a built-in 10-bit ADC that has a somewhat limited capability. The AD1115 has a 16-bit ADC resolution. This means the smallest voltage that Arduino can measure is 5V / 1024 = 0.0049V (or 4.9mV). Whereas the smallest voltage that ADS1115 can measure is 5V / 65536 = 0.000076V (76uV). Thus compared to Arduino ADC, the ADS1115 can measure a wide range of voltage. If you want more precison up to 0.3uV, you may check ADS1220 24-Bit ADC Module.
+
+Features of ADS1115
+16-bit Resolution
+Four (4) Channel Single-Ended or Two (2) Channel Differential Inputs
+I2C Protocol Interface
+Programmable Comparator
+Wide Supply Range
+Low Current Consumption
+Continuous-Conversion Mode
+Programmable Data Rate
+Programmable Comparator
+Single-Cycle Settling
+Internal Low-Drift Voltage Reference
+Internal Oscillator
+Wide Operating Temperature Range
+Available in Ultra-Small X2QFN Package
+
+ADS1115 Pin Configuration
+The below image shows the pin configuration of the ADS1115 chip.
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/028b11b7-123e-4353-836e-4c8c55c023a9)
+
+Pin 1 is the ADDR pin that selects the I2C address for the chip.
+Pin 2 is the Alert/Ready pin which serves as a data ready and alert signal.
+Pin 3 is the GND terminal.
+Pins 4, 5, 6 & 7 are the four (4) ADC input pins. We can use these pins as either four (4) single-ended inputs or two (2) differential inputs.
+Pin 8 is the positive power supply pin  which accepts 2.0 V to 5.5 V
+Pins 9 and 10 are the terminals for the I2C interface, SDA and SCL respectively.
+
+ADS1115 Functional Block Diagram
+The below is the functional diagram for the ADS1115 Chip.
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/2803e210-b0f5-4ad7-b0ff-fb9662a4e15c)
+
+Initially a multiplexer selects the input signal. Then, the selected signal feeds into a Programmable Gain amplifier (PGA). The PGA can programmed to provide amplification of small signals prior to conversion.
+
+Subsequently, the input is converted by a 16-bit Delta Sigma converter. The converter uses its own built-in voltage reference and built-in oscillator in measuring the input signal. Finally, the result of the conversion goes into the I2C interface. Also, a comparator provides a signal to the external interface that the result is ready for fetching.
+Typical Connections of the ADS1115
+The principle I2C connections for the ADS1115 is shown in the image below.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/a7ad589d-423b-4e33-a638-61c24219434d)
+The ADS1115 interfaces directly to standard mode, fast mode, and high-speed mode I2C controllers. Any microcontroller I2C peripheral, including master-only and single-master I2C peripherals, operates with the ADS1115.
+
+For more information refer to ADS1115 Datasheet
+ADS1115 Module or Breakout Board
+The ADS1115 comes with X2QFN & VSSOP package which can’t be used for prototyping. Therefore we need the ADS1115 Module or Breakout Board to use it with Arduino or Any other Microcontroller.
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/86eeb9a5-eb2d-4098-9cc5-a4627cec24df)
+
+These modules are widely available from different manufacturers and are very inexpensive. They are breadboard friendly and can be easily used in prototyping and testing applications.
+
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/5c2a003b-d785-4317-ae97-3f6834e3983f)
+
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/07f09ff8-1fb0-48be-878c-0e8cde1bd8e8)
+
+It follows the typical connection for the ADS1115 chip. The 10K ohms pull-up resistors are installed on the I2C and Alert pins. Also, there is a 1uF capacitor installed between the VDD pin and the GND which serves as a decoupling capacitor.
