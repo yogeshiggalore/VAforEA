@@ -200,3 +200,43 @@ ESP32 Specifications
 If you want to get a bit more technical and specific, you can take a look at the following detailed specifications of the ESP32 (source: http://esp32.net/)—for more details, check the datasheet):
 ![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/a0e856e9-e755-4158-82b7-d33a799bc358)
 
+Wireless connectivityWiFi: 150.0 Mbps data rate with HT40
+Bluetooth: BLE (Bluetooth Low Energy) and Bluetooth Classic
+Processor: Tensilica Xtensa Dual-Core 32-bit LX6 microprocessor, running at 160 or 240 MHz
+Memory:
+ROM: 448 KB (for booting and core functions)
+SRAM: 520 KB (for data and instructions)
+RTC fast SRAM: 8 KB (for data storage and main CPU during RTC Boot from the deep-sleep mode)
+RTC slow SRAM: 8KB (for co-processor accessing during deep-sleep mode)
+eFuse: 1 Kbit (of which 256 bits are used for the system (MAC address and chip configuration) and the remaining 768 bits are reserved for customer applications, including Flash-Encryption and Chip-ID)
+Embedded flash: flash connected internally via IO16, IO17, SD_CMD, SD_CLK, SD_DATA_0 and SD_DATA_1 on ESP32-D2WD and ESP32-PICO-D4.
+0 MiB (ESP32-D0WDQ6, ESP32-D0WD, and ESP32-S0WD chips)
+2 MiB (ESP32-D2WD chip)
+4 MiB (ESP32-PICO-D4 SiP module)
+Low Power: ensures that you can still use ADC conversions, for example, during deep sleep.
+Peripheral Input/Output: 
+peripheral interface with DMA that includes capacitive touch
+ADCs (Analog-to-Digital Converter)
+DACs (Digital-to-Analog Converter)
+I²C (Inter-Integrated Circuit)
+UART (Universal Asynchronous Receiver/Transmitter)
+SPI (Serial Peripheral Interface)
+I²S (Integrated Interchip Sound)
+RMII (Reduced Media-Independent Interface)
+PWM (Pulse-Width Modulation)
+Security: hardware accelerators for AES and SSL/TLS
+
+Specifications – ESP32 DEVKIT V1 DOIT
+The following table shows a summary of the ESP32 DEVKIT V1 DOIT board features and specifications:
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/1c01f052-88bc-4208-a115-125bef00563b)
+
+This particular ESP32 board comes with 36 pins, 18 on each side. The number of available GPIOs depends on your board model.
+
+To learn more about the ESP32 GPIOs, read our GPIO reference guide: ESP32 Pinout Reference: Which GPIO pins should you use?
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/755bd722-e318-437a-bbfc-0e5d4ec8cf03)
+
+GPIO pinout
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/ab208f7c-5a11-4759-b249-e52bf485f2c3)
+
+For programming and other detailed info please click this link
+https://randomnerdtutorials.com/getting-started-with-esp32/
