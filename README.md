@@ -160,5 +160,12 @@ Open link http://voice.ai-thinker.com/#/
 15. Build SDK as shown below
 ![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/58c352f0-f112-4a76-9142-b421d006b6b1)
 
+16. once the build is completed, download the firmware.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/67635f5a-e2c3-4322-8ab6-1da85d823d37)
 
-17. 
+17. download humming-bird-m-update-tool and open the download tool as shown below
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/05511a1b-c800-4fdd-9b67-e9cb8cce824d)
+
+18. go to your firmware download folder find uni_app_release_update.bin file, select the COM port and click ok
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/9acb6923-31dc-4a80-aa46-8640225af812)
+
