@@ -14,6 +14,8 @@ https://randomnerdtutorials.com/getting-started-with-esp32/
 
 https://how2electronics.com/how-to-use-ads1115-16-bit-adc-module-with-arduino/
 
+https://circuitdigest.com/microcontroller-projects/arduino-dac-tutorial-interfacing-mcp4725-dac
+
 
 
 # About XL4015 power supply module.
