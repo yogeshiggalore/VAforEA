@@ -17,7 +17,9 @@ https://how2electronics.com/how-to-use-ads1115-16-bit-adc-module-with-arduino/
 https://circuitdigest.com/microcontroller-projects/arduino-dac-tutorial-interfacing-mcp4725-dac
 
 # Idea/Concept
-Setting voltage and current of XL4015 power supply module using VC-02 voice control module. 
+Setting voltage and current of XL4015 power supply module using VC-02 voice control module. Here voice control module will convert the voice input to respective commands to the ESP32 module. Based on the command received ESP32 will control the DAC module to set the required current and voltage. ADS1115 module used for reading set voltage and current.
+
+# Logic behind setting voltage and current
 
 The XL4015 module has 2 multi-turn potentiometers to adjust the output voltage and the current limit.
 The voltage adjustment normally works by varying the 10K potentiometer which taps down the output voltage across a 270R resistor to provide a feedback voltage into the converter. This is compared against an internal 1.25V reference and to vary the duty cycle of the converter. So for example, if the potentiometer was set to be 540 ohm then the output voltage would settle to 3.75 volts. To provide digital control the potentiometer is set to a higher value and then current is fed into the 270R resistor from the DAC output via a 390R resistor. As the DAC output increases then less current is needed from the output via the potentiometer to give the 1.25V across the 270R and so the output voltage drops. At one extreme the DAC output can provide all the current needed to get the 1.25V across the 270R resistor and so the output voltage needed is 1.25V.
