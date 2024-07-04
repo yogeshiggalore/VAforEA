@@ -1,7 +1,7 @@
 # VAforEA
 VAforEA - Voice Assistant for Engineering Automation
 
-About XL4015 power supply module.
+# About XL4015 power supply module.
 The XL4015 power supply module has onboard constant voltage (CV) and constant current (CC) control feature which is useful for general-purpose power supply and battery charger applications.
 
 ![2-XL4015-CC-CV-Buck-Module-Specs](https://github.com/yogeshiggalore/VAforEA/assets/5477695/f2140c1c-3bf8-40e0-83e8-ec84e17bfc34)
