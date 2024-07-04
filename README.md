@@ -42,3 +42,52 @@ The overall design of the module is indeed a pretty neat and clever piece of wor
 
 ![10-Previous-Version-CKT-Snip](https://github.com/yogeshiggalore/VAforEA/assets/5477695/4768451c-f199-4661-a2df-1f82dd31b381)
 
+# about VC-02 module
+
+Overview
+VC series module is a low-cost pure offline speech recognition module developed by Shenzhen Ai-Thinker Technology Co., Ltd. The module uses the voice chip US516P6 launched by Unisound. It features high reliability and versatility. Highly reliable wake-up recognition rates, more distant wake-up, more low-incorrect wokens, more low-erroneous wake-up rates, more low-than-off, faster response identification time, secreted pure line identification.
+
+The VC Series module adopt a 32bit RISC architectural kernel and has joined the DSP instruction set required for signal processing and speech recognition, support floating point operations, and FFT accelerators. Supports up to 150 local instructions offline identification, support RTOS lightweight systems, as well as simple and friendly customary tools.
+
+The VC Series module has a rich peripheral interface, including UART / I2C / PWM / SPI, and simple&friendly secondary development tools for customers to implement a single-mode group speech control application scenario scheme.
+
+![images](https://github.com/yogeshiggalore/VAforEA/assets/5477695/d211a1bc-a526-484f-a09b-3d18eb001c34)
+
+Features
+* Support bilingual control, both Chinese and English
+* Single MIC Access
+* Support AEC echo elimination, steady-state noise reduction
+* Support to wake up from learning, no need to compile firmware
+* Comprehensive recognition rate can reach more than 98%
+* Identification time is less than 100ms
+* Extremely low error rate
+* Entry corpus up to 150
+
+Kernel Introduction
+* Integrated 32bit RISC kernel, frequency up to 240MHz
+* Support for DSP instruction sets and FPU floating point arithmetic units
+* FFT Accelerator: Maximum Support 1024 points FFT / IFFT operation, or 2048 points FFT / IFFT operation
+* Unisound Equation Customized Logo Algorithm
+* Built-in 242KB high-speed SRAM
+* 8kb ROM for boot
+* Built-in 2MB SPI Flash
+* Support 1 road simulation MIC input, SNR ≥ 94dB
+* Support for dual-channel DAC output
+* Built-in 5V to 3.3V, 3.3V 1.2V LDO is power supply for chip
+* Provide complete RTOS-based SDK
+
+# about VC-02 kit
+1. Product Overview
+The VC-02-Kit is a development board designed for the VC-02 module, and it shares the
+same board with VC-01-Kit. The development board integrates CH340C serial port to USB chip, providing basic debugging
+interface and USB upgrade interface, design of wake up light and cold and cooling lamp, provides status indication and control instructions, and easy to debug the simple control
+function. VC-02 is a low-cost pure offline speech recognition module developed by Shenzhen
+Ai-Thinker Technology Co., Ltd. The module uses the voice chip US516P6 launched by
+Unisound, and continuously optimizes and innovates algorithms in speech recognition
+technology. The offline recognition algorithm and chip architecture are deeply integrated to
+provide customers with ultra-low-cost offline speech recognition solutions. It can be widely
+and quickly applied to smart home, all kinds of smart small household appliances, 86 boxes, toys, lamps and other products that need voice control. The US516P6 chip uses a 32-bit RSIC architecture core and incorporates a DSP instruction set
+specifically for signal processing and speech recognition, an FPU arithmetic unit that supports
+floating-point operations, and an FFT accelerator. VC-02 supports offline identification of 150 local instructions, RTOS lightweight system, rich
+peripheral interfaces, and simple and friendly.
+
