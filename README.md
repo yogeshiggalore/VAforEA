@@ -10,6 +10,8 @@ https://docs.ai-thinker.com/en/voice_module
 
 https://www.espressif.com/
 
+https://randomnerdtutorials.com/getting-started-with-esp32/
+
 
 # About XL4015 power supply module.
 The XL4015 power supply module has onboard constant voltage (CV) and constant current (CC) control feature which is useful for general-purpose power supply and battery charger applications.
@@ -180,4 +182,21 @@ Open link http://voice.ai-thinker.com/#/
 
 22. UART output
 ![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/31bb257b-ef3e-47bf-9e4f-a0e781e6c315)
+
+# About ESP32
+The ESP32 is a series of low-cost and low-power System on a Chip (SoC) microcontrollers developed by Espressif that include Wi-Fi and Bluetooth wireless capabilities and dual-core processor. If you’re familiar with the ESP8266, the ESP32 is its successor, loaded with lots of new features.
+
+Why are they so popular? Mainly because of the following features:
+
+Low-cost: you can get an ESP32 starting at $6, which makes it easily accessible to the general public;
+Low-power: the ESP32 consumes very little power compared with other microcontrollers, and it supports low-power mode states like deep sleep to save power;
+Wi-Fi capabilities: the ESP32 can easily connect to a Wi-Fi network to connect to the internet (station mode), or create its own Wi-Fi wireless network (access point mode) so other devices can connect to it—this is essential for IoT and Home Automation projects—you can have multiple devices communicating with each other using their Wi-Fi capabilities;
+Bluetooth: the ESP32 supports Bluetooth classic and Bluetooth Low Energy (BLE)—which is useful for a wide variety of IoT applications;
+Dual-core: most ESP32 are dual-core— they come with 2 Xtensa 32-bit LX6 microprocessors: core 0 and core 1.
+Rich peripheral input/output interface—the ESP32 supports a wide variety of input (read data from the outside world) and output (to send commands/signals to the outside world) peripherals like capacitive touch, ADCs, DACs, UART, SPI, I2C, PWM, and much more.
+Compatible with the Arduino “programming language”: those that are already familiar with programming the Arduino board, you’ll be happy to know that they can program the ESP32 in the Arduino style.
+Compatible with MicroPython: you can program the ESP32 with MicroPython firmware, which is a re-implementation of Python 3 targeted for microcontrollers and embedded systems.
+ESP32 Specifications
+If you want to get a bit more technical and specific, you can take a look at the following detailed specifications of the ESP32 (source: http://esp32.net/)—for more details, check the datasheet):
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/a0e856e9-e755-4158-82b7-d33a799bc358)
 
