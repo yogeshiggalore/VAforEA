@@ -42,7 +42,7 @@ The overall design of the module is indeed a pretty neat and clever piece of wor
 
 ![10-Previous-Version-CKT-Snip](https://github.com/yogeshiggalore/VAforEA/assets/5477695/4768451c-f199-4661-a2df-1f82dd31b381)
 
-# about VC-02 module
+# About VC-02 module
 
 Overview
 VC series module is a low-cost pure offline speech recognition module developed by Shenzhen Ai-Thinker Technology Co., Ltd. The module uses the voice chip US516P6 launched by Unisound. It features high reliability and versatility. Highly reliable wake-up recognition rates, more distant wake-up, more low-incorrect wokens, more low-erroneous wake-up rates, more low-than-off, faster response identification time, secreted pure line identification.
@@ -76,18 +76,38 @@ Kernel Introduction
 * Built-in 5V to 3.3V, 3.3V 1.2V LDO is power supply for chip
 * Provide complete RTOS-based SDK
 
-# about VC-02 kit
+# About VC-02 kit
 1. Product Overview
 The VC-02-Kit is a development board designed for the VC-02 module, and it shares the
-same board with VC-01-Kit. The development board integrates CH340C serial port to USB chip, providing basic debugging
-interface and USB upgrade interface, design of wake up light and cold and cooling lamp, provides status indication and control instructions, and easy to debug the simple control
+same board as the VC-01-Kit. The development board integrates the CH340C serial port to the USB chip, providing a basic debugging
+interface and USB upgrade interface, design of wake-up light and cold and cooling lamp, provides status indication and control instructions, and easy to debug the simple control
 function. VC-02 is a low-cost pure offline speech recognition module developed by Shenzhen
 Ai-Thinker Technology Co., Ltd. The module uses the voice chip US516P6 launched by
 Unisound, and continuously optimizes and innovates algorithms in speech recognition
 technology. The offline recognition algorithm and chip architecture are deeply integrated to
 provide customers with ultra-low-cost offline speech recognition solutions. It can be widely
-and quickly applied to smart home, all kinds of smart small household appliances, 86 boxes, toys, lamps and other products that need voice control. The US516P6 chip uses a 32-bit RSIC architecture core and incorporates a DSP instruction set
+and quickly applied to smart homes, all kinds of smart small household appliances, 86 boxes, toys, lamps and other products that need voice control. The US516P6 chip uses a 32-bit RSIC architecture core and incorporates a DSP instruction set
 specifically for signal processing and speech recognition, an FPU arithmetic unit that supports
-floating-point operations, and an FFT accelerator. VC-02 supports offline identification of 150 local instructions, RTOS lightweight system, rich
-peripheral interfaces, and simple and friendly.
+floating-point operations, and an FFT accelerator. VC-02 supports offline identification of 150 local instructions, an RTOS lightweight system, rich
+peripheral interfaces, and is simple and friendly.
+
+![vc_02_01](https://github.com/yogeshiggalore/VAforEA/assets/5477695/dd420aee-63f1-438a-a79c-4963fed3fd21)
+
+main parameters:
+
+![vc_02_02](https://github.com/yogeshiggalore/VAforEA/assets/5477695/25ba313d-0130-462d-ab10-6b51e61ca87c)
+
+Electrical characteristics.
+![vc_02_03](https://github.com/yogeshiggalore/VAforEA/assets/5477695/448ace10-3ccd-4257-abc9-1c460b92edf0)
+
+Appearance
+![vc_02_04](https://github.com/yogeshiggalore/VAforEA/assets/5477695/1e011414-f0ce-4963-a173-e99e9020f808)
+
+pinouts
+
+![vc_02_05](https://github.com/yogeshiggalore/VAforEA/assets/5477695/03f896b7-491c-40ec-932a-f45924b745e8)
+
+schematics
+![vc_02_06](https://github.com/yogeshiggalore/VAforEA/assets/5477695/046fdbbc-619f-45ca-a413-54fc406192ae)
+
 
