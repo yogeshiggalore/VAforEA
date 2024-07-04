@@ -169,3 +169,15 @@ Open link http://voice.ai-thinker.com/#/
 18. go to your firmware download folder find uni_app_release_update.bin file, select the COM port and click ok
 ![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/9acb6923-31dc-4a80-aa46-8640225af812)
 
+19. press reset button and wait for 100% download
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/5125fc66-214d-4c13-bf07-41cf3eaa44dd)
+
+20. If green color download is completed.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/582a020c-52e3-48a0-b223-38aef161c73e)
+
+21. UART setup for testing.
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/8d666be5-0d7c-4566-ba2f-dd588f900ce9)
+
+22. UART output
+![image](https://github.com/yogeshiggalore/VAforEA/assets/5477695/31bb257b-ef3e-47bf-9e4f-a0e781e6c315)
+
