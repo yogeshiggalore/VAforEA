@@ -39,6 +39,10 @@ The measurement side is handled by a 4-channel 16-bit ADC (ADS1115). This actual
 8. Relay module
 9. Resistors 47R,390R,470R,1K,10K,2K2,11K2,100K
 
+# High-level block diagram
+
+# demo
+
 # About XL4015 power supply module.
 The XL4015 power supply module has an onboard constant voltage (CV) and constant current (CC) control feature which is useful for general-purpose power supply and battery charger applications.
 
