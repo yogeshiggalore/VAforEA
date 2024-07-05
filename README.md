@@ -40,8 +40,10 @@ The measurement side is handled by a 4-channel 16-bit ADC (ADS1115). This actual
 9. Resistors 47R,390R,470R,1K,10K,2K2,11K2,100K
 
 # High-level block diagram
+![block_vaforEA](https://github.com/yogeshiggalore/VAforEA/assets/5477695/6bb0b269-3f8d-463f-b33e-6667310cbfb5)
 
 # demo
+https://www.youtube.com/watch?v=pA92h-ue5Ts 
 
 # About XL4015 power supply module.
 The XL4015 power supply module has an onboard constant voltage (CV) and constant current (CC) control feature which is useful for general-purpose power supply and battery charger applications.
